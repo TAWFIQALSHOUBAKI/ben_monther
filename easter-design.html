@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+  }
+
+  .canvas {
+    width: 1080px;
+    height: 1080px;
+    position: relative;
+    background: linear-gradient(170deg, #fdf8ef 0%, #f9f1e0 30%, #faf4e8 60%, #f5ecd6 100%);
+    overflow: hidden;
+  }
+
+  /* Subtle warm texture overlay */
+  .canvas::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at 30% 25%, rgba(196,164,78,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 75%, rgba(180,140,80,0.05) 0%, transparent 50%);
+    z-index: 0;
+  }
+
+  /* Top gold arch band */
+  .top-band {
+    position: absolute;
+    top: -30px;
+    left: -50px;
+    right: -50px;
+    height: 230px;
+    background: linear-gradient(180deg, #b8953f 0%, #c9a74d 30%, #d4b85a 60%, #dfc668 100%);
+    border-radius: 0 0 50% 50%;
+    z-index: 1;
+  }
+
+  .top-band-inner {
+    position: absolute;
+    top: -30px;
+    left: -20px;
+    right: -20px;
+    height: 210px;
+    border-radius: 0 0 50% 50%;
+    border-bottom: 3px solid rgba(255,255,255,0.2);
+    z-index: 2;
+  }
+
+  /* Cross at top */
+  .cross-decoration {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    text-align: center;
+  }
+
+  .cross-svg {
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15));
+  }
+
+  /* Main heading */
+  .main-heading {
+    position: absolute;
+    top: 95px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    text-align: center;
+    width: 90%;
+  }
+
+  .main-heading h1 {
+    font-family: 'Cairo', sans-serif;
+    font-size: 72px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    line-height: 1.15;
+  }
+
+  .subtitle-line {
+    font-family: 'Cairo', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 5px;
+    letter-spacing: 6px;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  /* Greeting block */
+  .greeting-block {
+    position: absolute;
+    top: 290px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    text-align: center;
+    width: 78%;
+  }
+
+  .greeting-block p {
+    font-family: 'Cairo', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #5a4a2a;
+    line-height: 1.8;
+  }
+
+  .highlight-red {
+    color: #c0392b;
+    font-weight: 800;
+  }
+
+  .highlight-gold {
+    color: #b8953f;
+    font-weight: 800;
+  }
+
+  /* Central product area */
+  .product-center {
+    position: absolute;
+    top: 460px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .product-glow {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(196,164,78,0.18) 0%, rgba(196,164,78,0.06) 40%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+  }
+
+  .product-brand {
+    font-family: 'Cairo', sans-serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: #1a1a2e;
+    letter-spacing: 5px;
+    margin-top: 15px;
+  }
+
+  .product-brand-sub {
+    font-family: 'Cairo', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    color: #c4a44e;
+    margin-top: -8px;
+    letter-spacing: 2px;
+  }
+
+  .tagline {
+    font-family: 'Cairo', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #8b7a55;
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  /* Easter Eggs */
+  .egg {
+    position: absolute;
+    z-index: 5;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.12));
+  }
+
+  .egg svg { display: block; }
+
+  .egg-1 { top: 230px; left: 35px; transform: rotate(-15deg); }
+  .egg-2 { top: 330px; right: 40px; transform: rotate(12deg); }
+  .egg-3 { bottom: 260px; left: 25px; transform: rotate(18deg); }
+  .egg-4 { top: 190px; right: 100px; transform: rotate(-5deg); }
+  .egg-5 { bottom: 180px; right: 35px; transform: rotate(22deg); }
+  .egg-6 { bottom: 340px; left: 90px; transform: rotate(-10deg); }
+  .egg-7 { top: 270px; left: 140px; transform: rotate(8deg); }
+  .egg-8 { bottom: 230px; right: 120px; transform: rotate(-18deg); }
+
+  /* Flower clusters */
+  .flower-svg {
+    position: absolute;
+    z-index: 4;
+    opacity: 0.7;
+  }
+
+  .flower-1 { top: 250px; left: 160px; }
+  .flower-2 { bottom: 300px; right: 145px; }
+  .flower-3 { top: 380px; right: 40px; }
+  .flower-4 { bottom: 180px; left: 135px; }
+
+  /* Leaf / vine decorations */
+  .vine {
+    position: absolute;
+    z-index: 3;
+    opacity: 0.35;
+  }
+
+  .vine-left { top: 200px; left: 0; }
+  .vine-right { top: 200px; right: 0; transform: scaleX(-1); }
+
+  /* Sparkle stars */
+  .sparkle {
+    position: absolute;
+    z-index: 6;
+    color: #c4a44e;
+    opacity: 0.45;
+  }
+
+  /* Decorative divider */
+  .divider {
+    position: absolute;
+    top: 470px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 8;
+    width: 300px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(196,164,78,0.5), transparent);
+  }
+
+  /* Bottom gold banner */
+  .bottom-banner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 95px;
+    background: linear-gradient(0deg, #a6862f 0%, #c4a44e 100%);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bottom-banner .cta {
+    font-family: 'Cairo', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    letter-spacing: 1px;
+  }
+
+  /* Ornamental corner patterns */
+  .corner-ornament {
+    position: absolute;
+    z-index: 3;
+    opacity: 0.12;
+  }
+
+  .corner-tl { top: 200px; left: 0; }
+  .corner-tr { top: 200px; right: 0; transform: scaleX(-1); }
+  .corner-bl { bottom: 95px; left: 0; transform: scaleY(-1); }
+  .corner-br { bottom: 95px; right: 0; transform: scale(-1, -1); }
+
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- Top gold arch band -->
+  <div class="top-band"></div>
+  <div class="top-band-inner"></div>
+
+  <!-- Cross at top center -->
+  <div class="cross-decoration">
+    <svg class="cross-svg" width="50" height="65" viewBox="0 0 50 65">
+      <rect x="20" y="0" width="10" height="65" rx="2" fill="#fff"/>
+      <rect x="5" y="15" width="40" height="10" rx="2" fill="#fff"/>
+    </svg>
+  </div>
+
+  <!-- Main heading: عيد فصح مجيد -->
+  <div class="main-heading">
+    <h1>عيد فصح مجيد</h1>
+    <div class="subtitle-line">✦  حقاً قام  ✦</div>
+  </div>
+
+  <!-- Greeting text -->
+  <div class="greeting-block">
+    <p>
+      في فرحة <span class="highlight-red">عيد الفصح</span> المجيد
+      <br>
+      خلّي تركيزك عالي وطاقتك ما تخلص
+      <br>
+      مع <span class="highlight-gold">EMETIX Focus</span>
+    </p>
+  </div>
+
+  <!-- Decorative divider -->
+  <div class="divider"></div>
+
+  <!-- Corner ornamental patterns -->
+  <div class="corner-ornament corner-tl">
+    <svg width="120" height="200" viewBox="0 0 120 200">
+      <path d="M0,0 Q60,50 40,100 Q20,150 0,200" stroke="#b8953f" stroke-width="2" fill="none"/>
+      <path d="M0,20 Q50,60 35,110 Q15,160 0,200" stroke="#b8953f" stroke-width="1.5" fill="none"/>
+      <circle cx="40" cy="100" r="4" fill="#b8953f"/>
+      <circle cx="35" cy="60" r="3" fill="#b8953f"/>
+      <circle cx="25" cy="150" r="3" fill="#b8953f"/>
+    </svg>
+  </div>
+  <div class="corner-ornament corner-tr">
+    <svg width="120" height="200" viewBox="0 0 120 200">
+      <path d="M0,0 Q60,50 40,100 Q20,150 0,200" stroke="#b8953f" stroke-width="2" fill="none"/>
+      <path d="M0,20 Q50,60 35,110 Q15,160 0,200" stroke="#b8953f" stroke-width="1.5" fill="none"/>
+      <circle cx="40" cy="100" r="4" fill="#b8953f"/>
+      <circle cx="35" cy="60" r="3" fill="#b8953f"/>
+      <circle cx="25" cy="150" r="3" fill="#b8953f"/>
+    </svg>
+  </div>
+
+  <!-- Vine decorations along sides -->
+  <div class="vine vine-left">
+    <svg width="80" height="500" viewBox="0 0 80 500">
+      <path d="M40,0 C60,80 20,160 40,240 C60,320 20,400 40,500" stroke="#6b8a3e" stroke-width="3" fill="none"/>
+      <ellipse cx="55" cy="60" rx="18" ry="8" fill="#7da64a" transform="rotate(-30 55 60)"/>
+      <ellipse cx="25" cy="140" rx="16" ry="7" fill="#7da64a" transform="rotate(25 25 140)"/>
+      <ellipse cx="55" cy="220" rx="18" ry="8" fill="#7da64a" transform="rotate(-20 55 220)"/>
+      <ellipse cx="25" cy="300" rx="15" ry="7" fill="#7da64a" transform="rotate(30 25 300)"/>
+      <ellipse cx="55" cy="380" rx="17" ry="8" fill="#7da64a" transform="rotate(-25 55 380)"/>
+      <ellipse cx="30" cy="450" rx="14" ry="6" fill="#7da64a" transform="rotate(20 30 450)"/>
+    </svg>
+  </div>
+  <div class="vine vine-right">
+    <svg width="80" height="500" viewBox="0 0 80 500">
+      <path d="M40,0 C60,80 20,160 40,240 C60,320 20,400 40,500" stroke="#6b8a3e" stroke-width="3" fill="none"/>
+      <ellipse cx="55" cy="60" rx="18" ry="8" fill="#7da64a" transform="rotate(-30 55 60)"/>
+      <ellipse cx="25" cy="140" rx="16" ry="7" fill="#7da64a" transform="rotate(25 25 140)"/>
+      <ellipse cx="55" cy="220" rx="18" ry="8" fill="#7da64a" transform="rotate(-20 55 220)"/>
+      <ellipse cx="25" cy="300" rx="15" ry="7" fill="#7da64a" transform="rotate(30 25 300)"/>
+      <ellipse cx="55" cy="380" rx="17" ry="8" fill="#7da64a" transform="rotate(-25 55 380)"/>
+      <ellipse cx="30" cy="450" rx="14" ry="6" fill="#7da64a" transform="rotate(20 30 450)"/>
+    </svg>
+  </div>
+
+  <!-- Easter Eggs - colorful decorated eggs around the design -->
+  <!-- Egg 1: Red with gold zigzag -->
+  <div class="egg egg-1">
+    <svg width="75" height="95" viewBox="0 0 75 95">
+      <path d="M37.5,5 C55,5 70,30 70,55 C70,78 55,90 37.5,90 C20,90 5,78 5,55 C5,30 20,5 37.5,5Z" fill="#e74c3c"/>
+      <path d="M10,35 L20,25 L30,35 L40,25 L50,35 L60,25 L70,35" stroke="#f1c40f" stroke-width="3" fill="none"/>
+      <path d="M10,55 L20,45 L30,55 L40,45 L50,55 L60,45 L70,55" stroke="#f1c40f" stroke-width="3" fill="none"/>
+      <ellipse cx="37.5" cy="12" rx="20" ry="6" fill="rgba(255,255,255,0.15)"/>
+    </svg>
+  </div>
+
+  <!-- Egg 2: Blue with white dots -->
+  <div class="egg egg-2">
+    <svg width="70" height="90" viewBox="0 0 70 90">
+      <path d="M35,5 C52,5 65,28 65,52 C65,74 52,85 35,85 C18,85 5,74 5,52 C5,28 18,5 35,5Z" fill="#3498db"/>
+      <circle cx="20" cy="30" r="4" fill="#fff" opacity="0.7"/>
+      <circle cx="35" cy="25" r="4" fill="#fff" opacity="0.7"/>
+      <circle cx="50" cy="30" r="4" fill="#fff" opacity="0.7"/>
+      <circle cx="15" cy="50" r="4" fill="#fff" opacity="0.7"/>
+      <circle cx="35" cy="50" r="5" fill="#fff" opacity="0.7"/>
+      <circle cx="55" cy="50" r="4" fill="#fff" opacity="0.7"/>
+      <circle cx="25" cy="70" r="4" fill="#fff" opacity="0.7"/>
+      <circle cx="45" cy="70" r="4" fill="#fff" opacity="0.7"/>
+      <ellipse cx="35" cy="12" rx="18" ry="5" fill="rgba(255,255,255,0.15)"/>
+    </svg>
+  </div>
+
+  <!-- Egg 3: Purple with stripes -->
+  <div class="egg egg-3">
+    <svg width="65" height="85" viewBox="0 0 65 85">
+      <path d="M32.5,4 C48,4 60,26 60,48 C60,68 48,80 32.5,80 C17,80 5,68 5,48 C5,26 17,4 32.5,4Z" fill="#9b59b6"/>
+      <rect x="5" y="22" width="55" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+      <rect x="5" y="36" width="55" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+      <rect x="5" y="50" width="55" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+      <rect x="5" y="64" width="55" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+      <ellipse cx="32.5" cy="10" rx="17" ry="5" fill="rgba(255,255,255,0.15)"/>
+    </svg>
+  </div>
+
+  <!-- Egg 4: Green with flower pattern -->
+  <div class="egg egg-4">
+    <svg width="60" height="78" viewBox="0 0 60 78">
+      <path d="M30,4 C45,4 55,24 55,44 C55,62 45,74 30,74 C15,74 5,62 5,44 C5,24 15,4 30,4Z" fill="#2ecc71"/>
+      <circle cx="30" cy="38" r="8" fill="#f1c40f" opacity="0.7"/>
+      <circle cx="30" cy="38" r="4" fill="#e67e22" opacity="0.8"/>
+      <circle cx="20" cy="25" r="3" fill="#fff" opacity="0.4"/>
+      <circle cx="40" cy="25" r="3" fill="#fff" opacity="0.4"/>
+      <circle cx="20" cy="55" r="3" fill="#fff" opacity="0.4"/>
+      <circle cx="40" cy="55" r="3" fill="#fff" opacity="0.4"/>
+      <ellipse cx="30" cy="10" rx="15" ry="4" fill="rgba(255,255,255,0.15)"/>
+    </svg>
+  </div>
+
+  <!-- Egg 5: Orange with diamond pattern -->
+  <div class="egg egg-5">
+    <svg width="55" height="72" viewBox="0 0 55 72">
+      <path d="M27.5,4 C41,4 50,22 50,40 C50,56 41,67 27.5,67 C14,67 5,56 5,40 C5,22 14,4 27.5,4Z" fill="#f39c12"/>
+      <path d="M27.5,15 L35,30 L27.5,45 L20,30 Z" fill="rgba(255,255,255,0.35)" stroke="#fff" stroke-width="1.5"/>
+      <ellipse cx="27.5" cy="10" rx="13" ry="4" fill="rgba(255,255,255,0.15)"/>
+    </svg>
+  </div>
+
+  <!-- Egg 6: Pink with heart -->
+  <div class="egg egg-6">
+    <svg width="65" height="82" viewBox="0 0 65 82">
+      <path d="M32.5,4 C48,4 60,25 60,46 C60,65 48,77 32.5,77 C17,77 5,65 5,46 C5,25 17,4 32.5,4Z" fill="#e91e63"/>
+      <path d="M32.5,55 L22,42 C18,37 18,30 23,28 C28,26 32.5,32 32.5,32 C32.5,32 37,26 42,28 C47,30 47,37 43,42 Z" fill="rgba(255,255,255,0.5)"/>
+      <ellipse cx="32.5" cy="10" rx="16" ry="5" fill="rgba(255,255,255,0.15)"/>
+    </svg>
+  </div>
+
+  <!-- Egg 7: Teal small -->
+  <div class="egg egg-7">
+    <svg width="45" height="58" viewBox="0 0 45 58">
+      <path d="M22.5,3 C34,3 42,18 42,33 C42,47 34,55 22.5,55 C11,55 3,47 3,33 C3,18 11,3 22.5,3Z" fill="#1abc9c"/>
+      <path d="M3,22 L42,22" stroke="#fff" stroke-width="2" opacity="0.4"/>
+      <path d="M3,35" stroke="#fff" stroke-width="2" opacity="0.4"/>
+      <circle cx="22.5" cy="28" r="5" fill="#fff" opacity="0.3"/>
+      <ellipse cx="22.5" cy="8" rx="11" ry="3" fill="rgba(255,255,255,0.15)"/>
+    </svg>
+  </div>
+
+  <!-- Egg 8: Coral small -->
+  <div class="egg egg-8">
+    <svg width="48" height="62" viewBox="0 0 48 62">
+      <path d="M24,3 C36,3 44,19 44,35 C44,50 36,59 24,59 C12,59 4,50 4,35 C4,19 12,3 24,3Z" fill="#ff6b6b"/>
+      <path d="M4,20 Q24,30 44,20" stroke="#ffd93d" stroke-width="2.5" fill="none"/>
+      <path d="M4,38 Q24,48 44,38" stroke="#ffd93d" stroke-width="2.5" fill="none"/>
+      <ellipse cx="24" cy="9" rx="12" ry="3.5" fill="rgba(255,255,255,0.15)"/>
+    </svg>
+  </div>
+
+  <!-- Spring flowers -->
+  <div class="flower-svg flower-1">
+    <svg width="50" height="50" viewBox="0 0 50 50">
+      <circle cx="25" cy="15" r="7" fill="#f8b4c8" opacity="0.8"/>
+      <circle cx="15" cy="22" r="7" fill="#f8b4c8" opacity="0.8"/>
+      <circle cx="35" cy="22" r="7" fill="#f8b4c8" opacity="0.8"/>
+      <circle cx="18" cy="32" r="7" fill="#f8b4c8" opacity="0.8"/>
+      <circle cx="32" cy="32" r="7" fill="#f8b4c8" opacity="0.8"/>
+      <circle cx="25" cy="24" r="5" fill="#f1c40f"/>
+    </svg>
+  </div>
+
+  <div class="flower-svg flower-2">
+    <svg width="45" height="45" viewBox="0 0 45 45">
+      <circle cx="22" cy="12" r="6" fill="#a8d8ea" opacity="0.8"/>
+      <circle cx="12" cy="19" r="6" fill="#a8d8ea" opacity="0.8"/>
+      <circle cx="32" cy="19" r="6" fill="#a8d8ea" opacity="0.8"/>
+      <circle cx="15" cy="29" r="6" fill="#a8d8ea" opacity="0.8"/>
+      <circle cx="29" cy="29" r="6" fill="#a8d8ea" opacity="0.8"/>
+      <circle cx="22" cy="21" r="4" fill="#f39c12"/>
+    </svg>
+  </div>
+
+  <div class="flower-svg flower-3">
+    <svg width="40" height="40" viewBox="0 0 40 40">
+      <circle cx="20" cy="10" r="6" fill="#d4a5e5" opacity="0.7"/>
+      <circle cx="11" cy="17" r="6" fill="#d4a5e5" opacity="0.7"/>
+      <circle cx="29" cy="17" r="6" fill="#d4a5e5" opacity="0.7"/>
+      <circle cx="14" cy="27" r="6" fill="#d4a5e5" opacity="0.7"/>
+      <circle cx="26" cy="27" r="6" fill="#d4a5e5" opacity="0.7"/>
+      <circle cx="20" cy="19" r="4" fill="#f1c40f"/>
+    </svg>
+  </div>
+
+  <div class="flower-svg flower-4">
+    <svg width="38" height="38" viewBox="0 0 38 38">
+      <circle cx="19" cy="9" r="5.5" fill="#ffd93d" opacity="0.7"/>
+      <circle cx="10" cy="16" r="5.5" fill="#ffd93d" opacity="0.7"/>
+      <circle cx="28" cy="16" r="5.5" fill="#ffd93d" opacity="0.7"/>
+      <circle cx="13" cy="25" r="5.5" fill="#ffd93d" opacity="0.7"/>
+      <circle cx="25" cy="25" r="5.5" fill="#ffd93d" opacity="0.7"/>
+      <circle cx="19" cy="18" r="3.5" fill="#e67e22"/>
+    </svg>
+  </div>
+
+  <!-- Sparkle / star decorations -->
+  <div class="sparkle" style="top:310px; left:210px; font-size:18px; opacity:0.35;">✦</div>
+  <div class="sparkle" style="top:430px; right:200px; font-size:22px; opacity:0.4;">✦</div>
+  <div class="sparkle" style="bottom:310px; left:200px; font-size:16px; opacity:0.3;">✧</div>
+  <div class="sparkle" style="top:270px; right:200px; font-size:14px; opacity:0.35;">✦</div>
+  <div class="sparkle" style="bottom:380px; right:220px; font-size:20px; opacity:0.25;">✧</div>
+  <div class="sparkle" style="top:390px; left:130px; font-size:15px; opacity:0.3;">✦</div>
+
+  <!-- Product center -->
+  <div class="product-center">
+    <div class="product-glow"></div>
+
+    <!-- Easter wreath around product -->
+    <svg width="320" height="320" viewBox="0 0 320 320" style="position:absolute; top:-35px; left:50%; transform:translateX(-50%); z-index:-1; opacity:0.25;">
+      <circle cx="160" cy="160" r="140" stroke="#6b8a3e" stroke-width="8" fill="none"/>
+      <circle cx="160" cy="160" r="130" stroke="#8bc34a" stroke-width="3" fill="none" stroke-dasharray="8,6"/>
+      <ellipse cx="160" cy="22" rx="14" ry="7" fill="#7da64a" transform="rotate(0 160 160)"/>
+      <ellipse cx="258" cy="55" rx="14" ry="7" fill="#7da64a" transform="rotate(35 258 55)"/>
+      <ellipse cx="298" cy="160" rx="14" ry="7" fill="#7da64a" transform="rotate(90 298 160)"/>
+      <ellipse cx="258" cy="265" rx="14" ry="7" fill="#7da64a" transform="rotate(145 258 265)"/>
+      <ellipse cx="160" cy="298" rx="14" ry="7" fill="#7da64a" transform="rotate(0 160 298)"/>
+      <ellipse cx="62" cy="265" rx="14" ry="7" fill="#7da64a" transform="rotate(-145 62 265)"/>
+      <ellipse cx="22" cy="160" rx="14" ry="7" fill="#7da64a" transform="rotate(-90 22 160)"/>
+      <ellipse cx="62" cy="55" rx="14" ry="7" fill="#7da64a" transform="rotate(-35 62 55)"/>
+    </svg>
+
+    <!-- SVG Product sachet -->
+    <svg width="200" height="250" viewBox="0 0 200 250">
+      <defs>
+        <linearGradient id="sachetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#f8d84a"/>
+          <stop offset="40%" style="stop-color:#f0c830"/>
+          <stop offset="100%" style="stop-color:#e8b820"/>
+        </linearGradient>
+        <filter id="sachetShadow">
+          <feDropShadow dx="4" dy="8" stdDeviation="10" flood-opacity="0.2"/>
+        </filter>
+      </defs>
+      <rect x="20" y="10" width="160" height="230" rx="14" fill="url(#sachetGrad)" filter="url(#sachetShadow)"/>
+
+      <!-- Top seal area -->
+      <rect x="20" y="10" width="160" height="30" rx="14" fill="#d4a420" opacity="0.5"/>
+      <line x1="20" y1="40" x2="180" y2="40" stroke="#c49a18" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+      <!-- Brand name -->
+      <text x="100" y="82" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-size="28" font-weight="900" fill="#c0392b" letter-spacing="2">EMETIX</text>
+
+      <!-- Product name -->
+      <text x="100" y="128" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-size="40" font-weight="900" fill="#1a1a2e">Focus</text>
+
+      <!-- Subtitle -->
+      <text x="100" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="#444">For more Attention &amp;</text>
+      <text x="100" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="#444">Concentration</text>
+
+      <!-- Icons row -->
+      <circle cx="60" cy="200" r="16" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+      <circle cx="100" cy="200" r="16" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+      <circle cx="140" cy="200" r="16" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+
+      <!-- Weight label -->
+      <text x="165" y="228" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#c0392b">6g</text>
+    </svg>
+
+    <div class="product-brand">EMETIX</div>
+    <div class="product-brand-sub">Focus</div>
+    <div class="tagline">تركيز أعلى · طاقة أكثر · إنتاجية أفضل</div>
+  </div>
+
+  <!-- Bottom CTA banner -->
+  <div class="bottom-banner">
+    <span class="cta">اطلبه الآن واحتفل بعيد الفصح بطاقة كاملة</span>
+  </div>
+
+</div>
+</body>
+</html>
