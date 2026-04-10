@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMETIX Focus – عيد الفصح</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #f0f0f0;
+      font-family: 'Cairo', 'Arial', sans-serif;
+    }
+
+    .card {
+      position: relative;
+      width: 780px;
+      height: 980px;
+      overflow: hidden;
+      background: linear-gradient(160deg, #f9fce4 0%, #e8f5d0 30%, #d4edda 60%, #c5e8f0 100%);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+    }
+
+    /* ── Decorative background blobs ── */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.35;
+    }
+    .blob-1 { width: 420px; height: 420px; background: #aee67f; top: -120px; left: -100px; }
+    .blob-2 { width: 340px; height: 340px; background: #f9d9f9; top: 200px; right: -80px; }
+    .blob-3 { width: 280px; height: 280px; background: #ffe8a0; bottom: 60px; left: -60px; }
+
+    /* ── Scattered Easter eggs (pure CSS) ── */
+    .egg {
+      position: absolute;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    }
+    .egg-1  { width:54px; height:70px; background: linear-gradient(135deg,#f6c5e8,#f986c8); top:42px;  left:48px;  transform:rotate(-20deg); box-shadow:0 4px 14px rgba(0,0,0,.12); }
+    .egg-2  { width:44px; height:57px; background: linear-gradient(135deg,#b5f0c6,#5ecb7a); top:120px; right:60px; transform:rotate(15deg);  box-shadow:0 4px 14px rgba(0,0,0,.12); }
+    .egg-3  { width:38px; height:50px; background: linear-gradient(135deg,#ffe57a,#f5a623); top:80px;  right:160px;transform:rotate(-10deg); box-shadow:0 4px 14px rgba(0,0,0,.10); }
+    .egg-4  { width:48px; height:62px; background: linear-gradient(135deg,#a8d8ff,#5babf5); bottom:220px; left:36px; transform:rotate(18deg);  box-shadow:0 4px 14px rgba(0,0,0,.12); }
+    .egg-5  { width:36px; height:46px; background: linear-gradient(135deg,#ffd1b0,#ff8c5a); top:38px;  left:200px; transform:rotate(8deg);   box-shadow:0 4px 10px rgba(0,0,0,.10); }
+    .egg-6  { width:42px; height:55px; background: linear-gradient(135deg,#d1b0ff,#9b5cf6); bottom:310px; right:42px; transform:rotate(-22deg); box-shadow:0 4px 14px rgba(0,0,0,.12); }
+
+    /* stripe decoration on eggs */
+    .egg::after {
+      content:'';
+      position:absolute;
+      width:100%; height:12px;
+      background:rgba(255,255,255,0.35);
+      top:50%; transform:translateY(-50%);
+      border-radius:4px;
+    }
+
+    /* ── Flowers / blossoms ── */
+    .flower { position:absolute; }
+    .petal {
+      position:absolute;
+      width:14px; height:28px;
+      background: radial-gradient(circle at 50% 30%, #ffb6c1, #ff6b9d);
+      border-radius:50%;
+      transform-origin: 50% 100%;
+    }
+    .flower-center {
+      position:absolute;
+      width:12px; height:12px;
+      background:#ffe066;
+      border-radius:50%;
+      top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      box-shadow:0 0 6px rgba(0,0,0,.15);
+    }
+
+    /* ── Butterfly (simple CSS) ── */
+    .butterfly { position:absolute; }
+    .wing {
+      position:absolute;
+      width:30px; height:22px;
+      border-radius:60% 40% 40% 60%;
+      opacity:.82;
+    }
+    .wing-l { background: linear-gradient(120deg,#f9a8d4,#fbcfe8); left:0;  top:0; transform:rotate(-30deg); }
+    .wing-r { background: linear-gradient(120deg,#fbcfe8,#f9a8d4); left:18px; top:0; transform:rotate(30deg);  }
+
+    /* ── Grass / spring leaves ── */
+    .grass { position:absolute; bottom:0; left:0; width:100%; height:70px; }
+
+    /* ── Logo ── */
+    .logo-wrap {
+      position:absolute;
+      top:30px; left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      z-index:10;
+    }
+    .logo-text {
+      font-size:28px;
+      font-weight:900;
+      color:#2d6a1f;
+      letter-spacing:1px;
+      text-shadow:0 2px 8px rgba(255,255,255,.7);
+    }
+    .logo-text span { color:#6dbf3e; }
+
+    /* ── Hero text ── */
+    .hero-text {
+      position:absolute;
+      top:130px;
+      left:50%;
+      transform:translateX(-50%);
+      text-align:center;
+      width:680px;
+      z-index:10;
+    }
+    .hero-title {
+      font-size:52px;
+      font-weight:900;
+      line-height:1.25;
+      color:#1a4a0e;
+      text-shadow:0 2px 12px rgba(255,255,255,.6);
+    }
+    .hero-subtitle {
+      margin-top:14px;
+      font-size:30px;
+      font-weight:700;
+      color:#3a7d23;
+      text-shadow:0 1px 8px rgba(255,255,255,.5);
+    }
+
+    /* ── Product image area ── */
+    .product-area {
+      position:absolute;
+      bottom:160px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:10;
+      display:flex;
+      align-items:flex-end;
+      gap:0;
+    }
+
+    /* Fake product pouch (CSS-drawn to match brand yellow) */
+    .product-pouch {
+      position:relative;
+      width:170px;
+      height:210px;
+    }
+    .pouch-body {
+      width:170px;
+      height:200px;
+      background: linear-gradient(160deg, #ffe44d 0%, #f5c800 50%, #d9a800 100%);
+      border-radius:18px 18px 22px 22px;
+      box-shadow:0 10px 40px rgba(0,0,0,.22);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      border:2px solid rgba(255,255,255,.4);
+    }
+    .pouch-brand {
+      font-size:15px;
+      font-weight:900;
+      color:#1a1a1a;
+      letter-spacing:1.5px;
+      margin-bottom:2px;
+    }
+    .pouch-name {
+      font-size:28px;
+      font-weight:900;
+      color:#1a1a1a;
+      letter-spacing:2px;
+    }
+    .pouch-tagline {
+      font-size:9px;
+      color:#333;
+      text-align:center;
+      margin-top:4px;
+      padding:0 10px;
+      line-height:1.3;
+    }
+    .pouch-icons {
+      display:flex;
+      gap:8px;
+      margin-top:6px;
+    }
+    .pouch-icon {
+      width:24px; height:24px;
+      background:rgba(255,255,255,.35);
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:13px;
+    }
+    .pouch-weight {
+      position:absolute;
+      bottom:6px;
+      right:12px;
+      font-size:11px;
+      font-weight:700;
+      color:#555;
+    }
+
+    /* Badge on pouch */
+    .badge {
+      position:absolute;
+      top:-22px;
+      right:-22px;
+      width:72px;
+      height:72px;
+      background: linear-gradient(135deg,#6dbf3e,#3a9a1a);
+      border-radius:50%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      font-size:11px;
+      font-weight:800;
+      color:#fff;
+      text-align:center;
+      line-height:1.2;
+      box-shadow:0 4px 16px rgba(0,0,0,.25);
+      z-index:20;
+    }
+
+    /* Easter basket behind pouch */
+    .basket-wrap {
+      position:relative;
+      width:90px;
+      margin-right:-20px;
+      z-index:8;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+    .basket-body {
+      width:90px;
+      height:62px;
+      background: linear-gradient(160deg,#d4a45a,#b8823a);
+      border-radius:0 0 20px 20px;
+      position:relative;
+      overflow:hidden;
+    }
+    .basket-body::before {
+      content:'';
+      position:absolute;
+      top:0; left:0; right:0; bottom:0;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,.12) 0px, rgba(255,255,255,.12) 4px,
+        transparent 4px, transparent 12px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,.12) 0px, rgba(255,255,255,.12) 4px,
+        transparent 4px, transparent 10px
+      );
+    }
+    .basket-handle {
+      width:60px;
+      height:30px;
+      border:5px solid #b8823a;
+      border-bottom:none;
+      border-radius:30px 30px 0 0;
+      margin-bottom:-2px;
+    }
+    .basket-eggs {
+      position:absolute;
+      top:-14px;
+      left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      gap:4px;
+    }
+    .b-egg {
+      width:20px; height:26px;
+      border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+    }
+    .b-egg:nth-child(1){ background:linear-gradient(135deg,#f6c5e8,#f986c8); }
+    .b-egg:nth-child(2){ background:linear-gradient(135deg,#ffe57a,#f5a623); }
+    .b-egg:nth-child(3){ background:linear-gradient(135deg,#a8d8ff,#5babf5); }
+
+    /* ── Ribbon CTA ── */
+    .cta-ribbon {
+      position:absolute;
+      bottom:58px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:12;
+      background: linear-gradient(90deg,#4caf50,#2e7d32);
+      color:#fff;
+      font-family:'Cairo','Arial',sans-serif;
+      font-size:26px;
+      font-weight:800;
+      padding:16px 58px;
+      border-radius:50px;
+      box-shadow:0 8px 28px rgba(46,125,50,.45);
+      letter-spacing:1px;
+      white-space:nowrap;
+      border:3px solid rgba(255,255,255,.3);
+    }
+    .cta-ribbon::before,
+    .cta-ribbon::after {
+      content:'';
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:0; height:0;
+    }
+    .cta-ribbon::before { right:-18px; border-left:18px solid #2e7d32; border-top:20px solid transparent; border-bottom:20px solid transparent; }
+    .cta-ribbon::after  { left:-18px;  border-right:18px solid #2e7d32; border-top:20px solid transparent; border-bottom:20px solid transparent; }
+
+    /* ── Sparkle stars ── */
+    .sparkle {
+      position:absolute;
+      width:10px; height:10px;
+      background:#fff;
+      clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+      opacity:.7;
+    }
+
+    /* ── Green wavy grass bottom ── */
+    .grass-svg {
+      position:absolute;
+      bottom:0; left:0;
+      width:100%; height:90px;
+      z-index:5;
+    }
+
+    /* ── Rabbits (CSS only) ── */
+    .rabbit { position:absolute; z-index:6; }
+    .rabbit-body {
+      width:36px; height:42px;
+      background:#f5f5f5;
+      border-radius:18px 18px 14px 14px;
+      position:relative;
+      box-shadow:0 2px 8px rgba(0,0,0,.12);
+    }
+    .rabbit-ear {
+      position:absolute;
+      width:10px; height:26px;
+      background:#f5f5f5;
+      border-radius:8px 8px 4px 4px;
+      top:-22px;
+    }
+    .rabbit-ear::after {
+      content:'';
+      position:absolute;
+      width:5px; height:16px;
+      background:#f9c0c0;
+      border-radius:4px;
+      top:4px; left:50%; transform:translateX(-50%);
+    }
+    .ear-l { left:4px; transform:rotate(-8deg); }
+    .ear-r { right:4px; transform:rotate(8deg); }
+    .rabbit-eye {
+      position:absolute;
+      width:5px; height:5px;
+      background:#333;
+      border-radius:50%;
+      top:10px;
+    }
+    .eye-l { left:7px; }
+    .eye-r { right:7px; }
+    .rabbit-nose {
+      position:absolute;
+      width:6px; height:4px;
+      background:#f9a8d4;
+      border-radius:50%;
+      top:18px; left:50%; transform:translateX(-50%);
+    }
+    .rabbit-tail {
+      position:absolute;
+      width:14px; height:14px;
+      background:#fff;
+      border-radius:50%;
+      bottom:-6px; right:-4px;
+      box-shadow:0 1px 4px rgba(0,0,0,.1);
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <!-- Background blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- Scattered Easter eggs -->
+  <div class="egg egg-1"></div>
+  <div class="egg egg-2"></div>
+  <div class="egg egg-3"></div>
+  <div class="egg egg-4"></div>
+  <div class="egg egg-5"></div>
+  <div class="egg egg-6"></div>
+
+  <!-- Sparkles -->
+  <div class="sparkle" style="top:95px;left:135px;width:14px;height:14px;opacity:.6;"></div>
+  <div class="sparkle" style="top:55px;right:220px;width:10px;height:10px;opacity:.5;"></div>
+  <div class="sparkle" style="top:170px;left:90px;width:8px;height:8px;opacity:.4;"></div>
+  <div class="sparkle" style="bottom:270px;right:110px;width:12px;height:12px;opacity:.6;"></div>
+
+  <!-- Butterflies -->
+  <div class="butterfly" style="top:200px;left:60px;transform:scale(1.3);">
+    <div class="wing wing-l"></div>
+    <div class="wing wing-r"></div>
+  </div>
+  <div class="butterfly" style="top:310px;right:55px;transform:scale(1.1) rotate(10deg);">
+    <div class="wing wing-l"></div>
+    <div class="wing wing-r"></div>
+  </div>
+
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <span class="logo-text">EMETIX <span>Focus</span></span>
+  </div>
+
+  <!-- Hero text -->
+  <div class="hero-text">
+    <div class="hero-title">كل عام وأنتم بخير</div>
+    <div class="hero-subtitle">بمناسبة عيد الفصح المبارك</div>
+    <div style="margin-top:18px;font-size:21px;font-weight:600;color:#2d6a1f;line-height:1.55;text-shadow:0 1px 6px rgba(255,255,255,.5);">
+      لا تخلّي التعب يسرق فرحتك<br/>
+      ولا السهر يضيّع نشاطك
+    </div>
+  </div>
+
+  <!-- Product + basket -->
+  <div class="product-area">
+    <!-- Easter basket -->
+    <div class="basket-wrap">
+      <div class="basket-handle"></div>
+      <div class="basket-body">
+        <div class="basket-eggs">
+          <div class="b-egg"></div>
+          <div class="b-egg"></div>
+          <div class="b-egg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product pouch -->
+    <div class="product-pouch" style="z-index:10;">
+      <div class="badge">مفعول<br/>خلال<br/>15 د</div>
+      <div class="pouch-body">
+        <div class="pouch-brand">EMETIX</div>
+        <div class="pouch-name">Focus</div>
+        <div class="pouch-tagline">For more Attention &amp;<br/>Concentration</div>
+        <div class="pouch-icons">
+          <div class="pouch-icon">🧠</div>
+          <div class="pouch-icon">📚</div>
+          <div class="pouch-icon">🎯</div>
+        </div>
+        <span class="pouch-weight">6g</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CSS Rabbit left -->
+  <div class="rabbit" style="bottom:68px;left:44px;">
+    <div class="rabbit-body">
+      <div class="rabbit-ear ear-l"></div>
+      <div class="rabbit-ear ear-r"></div>
+      <div class="rabbit-eye eye-l"></div>
+      <div class="rabbit-eye eye-r"></div>
+      <div class="rabbit-nose"></div>
+      <div class="rabbit-tail"></div>
+    </div>
+  </div>
+
+  <!-- CSS Rabbit right (smaller, mirrored) -->
+  <div class="rabbit" style="bottom:68px;right:44px;transform:scaleX(-1);">
+    <div class="rabbit-body">
+      <div class="rabbit-ear ear-l"></div>
+      <div class="rabbit-ear ear-r"></div>
+      <div class="rabbit-eye eye-l"></div>
+      <div class="rabbit-eye eye-r"></div>
+      <div class="rabbit-nose"></div>
+      <div class="rabbit-tail"></div>
+    </div>
+  </div>
+
+  <!-- Green wavy grass bottom -->
+  <svg class="grass-svg" viewBox="0 0 780 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,60 Q30,20 60,50 Q90,80 120,40 Q150,10 180,45 Q210,75 240,38 Q270,5 300,42 Q330,72 360,35 Q390,5 420,40 Q450,70 480,38 Q510,8 540,45 Q570,78 600,42 Q630,12 660,50 Q690,80 720,44 Q750,15 780,55 L780,90 L0,90 Z" fill="#4caf50" opacity="0.85"/>
+    <path d="M0,70 Q40,35 80,65 Q120,90 160,55 Q200,25 240,62 Q280,88 320,58 Q360,28 400,65 Q440,90 480,60 Q520,30 560,68 Q600,90 640,58 Q680,28 720,65 Q750,85 780,68 L780,90 L0,90 Z" fill="#388e3c" opacity="0.75"/>
+    <!-- Flower decorations in grass -->
+    <circle cx="100" cy="58" r="5" fill="#ffe066"/>
+    <circle cx="100" cy="58" r="8" fill="none" stroke="#f9a8d4" stroke-width="5" stroke-dasharray="4 4"/>
+    <circle cx="310" cy="52" r="5" fill="#ffe066"/>
+    <circle cx="310" cy="52" r="8" fill="none" stroke="#f9a8d4" stroke-width="5" stroke-dasharray="4 4"/>
+    <circle cx="520" cy="55" r="5" fill="#ffe066"/>
+    <circle cx="520" cy="55" r="8" fill="none" stroke="#f9a8d4" stroke-width="5" stroke-dasharray="4 4"/>
+    <circle cx="670" cy="60" r="5" fill="#ffe066"/>
+    <circle cx="670" cy="60" r="8" fill="none" stroke="#f9a8d4" stroke-width="5" stroke-dasharray="4 4"/>
+  </svg>
+
+  <!-- CTA Ribbon -->
+  <div class="cta-ribbon">اطلبه الآن لعيد الفصح 🐣</div>
+
+</div>
+</body>
+</html>
